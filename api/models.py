@@ -20,7 +20,7 @@ class User(AbstractUser):
 class BusinessCard(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    avatar = models.ImageField()
+    avatar = models.ImageField(null=True)
     role = models.CharField("Роль человека", max_length=19)
     phone = models.CharField("Номер телефона", max_length=19)
     
