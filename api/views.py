@@ -97,3 +97,14 @@ class CreateCard(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class GetUserCards(APIView):
+
+    def get(self, request):
+        if not request.data.get("id"):
+            return Response({"id": "required"})
+
+        bcs = BusinessCard.objects.filter(owner_id=request.data["id"])
+        serializer = serializers.BusinessCardSerializer(bcs, many=True)
+        return Response(serializer.data)
