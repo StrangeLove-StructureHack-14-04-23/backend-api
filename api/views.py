@@ -86,3 +86,14 @@ class GetCardByID(APIView):
         serializer.data._mutable = True
         serializer.data.update({"first_name": card.first_name})
         return Response(serializer.data)
+
+
+class CreateCard(APIView):
+
+    def post(self, request):
+        if not request.data.get("owner_id"):
+            return Response({"owner_id": "No user id"})
+        serializer = serializers.BusinessCardSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

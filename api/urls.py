@@ -10,4 +10,5 @@ urlpatterns = [
     path('users/get', views.GetUser.as_view(), name="GetUser"),
     
     path('cards/get', views.GetCardByID.as_view(), name="Get Card By ID"),
+    path('cards/create', views.CreateCard.as_view(), name="Create Card"),
 ]

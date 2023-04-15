@@ -19,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class LoginSerializer(serializers.Serializer):
 
     username = serializers.CharField(
@@ -31,7 +32,6 @@ class LoginSerializer(serializers.Serializer):
         trim_whitespace=False,
         write_only=True
     )
-
 
     def validate(self, attrs):
         username = attrs.get('username')
@@ -60,7 +60,10 @@ class BusinessCardSerializer(serializers.ModelSerializer):
         fields = [
             "id", "owner_id", "role", "phone", "own_site", "linkedin_url", "telegram_url"
         ]
-    
+        extra_kwargs = {
+            'owner_id': {'write_only': True},
+        }
+
     def create(self, validated_data):
         instance = self.Meta.model(**validated_data)
         instance.save()
