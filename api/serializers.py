@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from api.models import User, BusinessCard
+from api.models import User, BusinessCard, Hotspot
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -68,3 +68,12 @@ class BusinessCardSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         return instance
+
+
+class HotspotPeople(serializers.ModelSerializer):
+
+    class Meta:
+        model = Hotspot
+        fields = [
+            "ip", "get_peoples"
+        ]

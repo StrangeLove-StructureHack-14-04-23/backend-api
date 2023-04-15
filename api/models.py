@@ -37,3 +37,26 @@ class BusinessCard(models.Model):
 
     def __str__(self):
         return f"{self.first_name} - {self.role}: {self.phone} / ({self.own_site}, {self.linkedin_url}, {self.telegram_url})"    
+
+
+class Hotspot(models.Model):
+    
+    ip = models.CharField("Айпишники вайфая", max_length=55)
+    peoples = models.TextField("ID людей в этой сети")
+    
+    def __str__(self):
+        return f"{self.ip}: {self.peoples}"
+    
+    @property
+    def get_peoples(self):
+        peoples = list(map(int, self.peoples.split()))
+        return peoples
+
+    def add_to_people(self, user_id: int):
+        return self.peoples + " " + user_id
+    
+    def check_user_in_hotspot(self, user_id: int):
+        people = list(map(int, self.peoples.split()))
+        if user_id in people:
+            return True
+        return False

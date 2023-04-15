@@ -7,7 +7,7 @@ from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from . import serializers
 import datetime
 import jwt
-from api.models import User, BusinessCard
+from api.models import User, BusinessCard, Hotspot
 
 def welcome(request):
     return HttpResponse("<h1>Welcome's Page!</h1>")
@@ -108,3 +108,31 @@ class GetUserCards(APIView):
         bcs = BusinessCard.objects.filter(owner_id=request.data["id"])
         serializer = serializers.BusinessCardSerializer(bcs, many=True)
         return Response(serializer.data)
+
+
+class ConnectToHotspot(APIView):
+
+    def post(self, request):
+
+        if not request.data.get("ip"):
+            return Response({"ip": "required"})
+
+        if not request.data.get("user_id"):
+            return Response({"user_id": "required"})
+
+        hot = Hotspot.objects.filter(ip=request.data["ip"]).first()
+        if not hot:
+            hot = Hotspot()
+            hot.ip = request.data['ip']
+            hot.peoples = hot.add_to_people(request.data['user_id'])
+            hot.save()
+            return Response({"status": "created new hot"})
+        
+        print(request.data['user_id'], hot.check_user_in_hotspot(int(request.data['user_id'])))
+        if not hot.check_user_in_hotspot(int(request.data['user_id'])):
+            hot.peoples = hot.add_to_people(request.data['user_id'])
+            hot.save()
+            return Response({"status": "added to hotspot"})
+        else:
+            return Response({"status": "you're already in hotspot"})
+        
