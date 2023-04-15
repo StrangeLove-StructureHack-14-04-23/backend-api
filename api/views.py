@@ -7,7 +7,7 @@ from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from . import serializers
 import datetime
 import jwt
-from api.models import User
+from api.models import User, BusinessCard
 
 def welcome(request):
     return HttpResponse("<h1>Welcome's Page!</h1>")
@@ -68,4 +68,21 @@ class GetUser(APIView):
         if not user:
             return Response({})
         serializer = serializers.UserSerializer(user)
+        return Response(serializer.data)
+
+
+class GetCardByID(APIView):
+
+    def get(self, request):
+        
+        if not request.data.get("id"):
+            return Response({"id": "required"})
+        
+        card = BusinessCard.objects.filter(id=request.data["id"]).first()
+        if not card:
+            return Response({"error": "no card???"})
+
+        serializer = serializers.BusinessCardSerializer(card)
+        serializer.data._mutable = True
+        serializer.data.update({"first_name": card.first_name})
         return Response(serializer.data)

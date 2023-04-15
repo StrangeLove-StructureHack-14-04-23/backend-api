@@ -7,5 +7,7 @@ urlpatterns = [
     path('register', views.RegisterView.as_view(), name="Registration"),
     path('login', views.LoginView.as_view(), name="Login"),
 
-    path('users/get', views.GetUser.as_view(), name="GetUser")
+    path('users/get', views.GetUser.as_view(), name="GetUser"),
+    
+    path('cards/get', views.GetCardByID.as_view(), name="Get Card By ID"),
 ]

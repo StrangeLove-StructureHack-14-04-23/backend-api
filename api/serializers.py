@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from api.models import User
+from api.models import User, BusinessCard
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -51,3 +51,17 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(msg, code='authorization')
         attrs['user'] = user
         return attrs
+
+
+class BusinessCardSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BusinessCard
+        fields = [
+            "id", "owner_id", "role", "phone", "own_site", "linkedin_url", "telegram_url"
+        ]
+    
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return instance

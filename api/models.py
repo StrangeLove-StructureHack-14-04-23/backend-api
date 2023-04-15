@@ -19,8 +19,7 @@ class User(AbstractUser):
 
 class BusinessCard(models.Model):
 
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    avatar = models.ImageField()
+    owner_id = models.IntegerField("Айди создателя", null=True)
     role = models.CharField("Роль человека", max_length=19)
     phone = models.CharField("Номер телефона", max_length=19)
     
@@ -31,7 +30,10 @@ class BusinessCard(models.Model):
 
     @property
     def first_name(self):
-        return self.owner.first_name
+        o = User.objects.filter(id=self.owner_id).first()
+        if not o:
+            return "Can't find user"
+        return o.first_name
 
     def __str__(self):
-        return f"{self.first_name} ({self.owner.id}) - {self.role}: {self.phone} / ({self.own_site}, {self.linkedin_url}, {self.telegram_url})"    
+        return f"{self.first_name} - {self.role}: {self.phone} / ({self.own_site}, {self.linkedin_url}, {self.telegram_url})"    
