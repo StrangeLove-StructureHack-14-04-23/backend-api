@@ -84,3 +84,12 @@ class GetCardByID(APIView):
 
         serializer = serializers.BusinessCardSerializer(data=card)
         return Response(serializer.data)
+
+
+class CreateCard(APIView):
+
+    def post(self, request):
+        serializer = serializers.BusinessCardCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

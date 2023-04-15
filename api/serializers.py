@@ -51,6 +51,22 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(msg, code='authorization')
         attrs['user'] = user
         return attrs
+    
+
+class BusinessCardCreateSerializer(serializers.Serializer):
+    
+    class Meta:
+        model = BusinessCard
+        fields = [
+            "user_id", "role", "phone", "own_site", "linkedin_url", "telegram_url"
+        ]
+    
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        card_owner = User.objects.filter(id=validated_data.get("user_id")).first()
+        instance.owner = card_owner
+        instance.save()
+        return instance
 
 
 class BusinessCardSerializer(serializers.Serializer):
@@ -58,13 +74,10 @@ class BusinessCardSerializer(serializers.Serializer):
     class Meta:
         model = BusinessCard
         fileds = [
-            "id", "first_name", "role", "phone", "own_site", "linkedin_url", "telegram_url"
+            "id",  "role", "phone", "own_site", "linkedin_url", "telegram_url"
         ]
 
-        def create(self, validated_data):
-            password = validated_data.pop('password', None)
-            instance = self.Meta.model(**validated_data)
-            if password is not None:
-                instance.set_password(password)
-            instance.save()
-            return instance
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return instance
