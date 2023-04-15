@@ -15,3 +15,23 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username}: {self.first_name} {self.last_name}"
+
+
+class BusinessCard(models.Model):
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    avatar = models.ImageField()
+    role = models.CharField("Роль человека", max_length=19)
+    phone = models.CharField("Номер телефона", max_length=19)
+    
+    # Urls
+    own_site = models.CharField("Сайт человека", max_length=120)
+    linkedin_url = models.CharField("Ссылка на Линкдин", max_length=120)
+    telegram_url = models.CharField("Ссылка на Телеграм", max_length=120)
+
+    @property
+    def first_name(self):
+        return self.owner.first_name
+
+    def __str__(self):
+        return f"{self.first_name} ({self.owner.id}) - {self.role}: {self.phone} / ({self.own_site}, {self.linkedin_url}, {self.telegram_url})"    
