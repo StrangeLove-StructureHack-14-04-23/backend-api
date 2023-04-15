@@ -135,4 +135,26 @@ class ConnectToHotspot(APIView):
             return Response({"status": "added to hotspot"})
         else:
             return Response({"status": "you're already in hotspot"})
+
+
+class GetCardsInHotspot(APIView):
+
+    def post(self, request):
         
+        if not request.data.get("ip"):
+            return Response({"ip": "required"})
+        
+        hot = Hotspot.objects.filter(ip=request.data['ip']).first()
+        
+        if not hot:
+            return Response({"error": "no such network"})
+        
+        cards = []
+        people_ids = hot.get_peoples
+        for pid in people_ids:
+            user_cards = BusinessCard.objects.filter(owner_id=pid)
+            for c in user_cards:
+                cards.append(c)
+        
+        serializer = serializers.BusinessCardSerializer(cards, many=True)
+        return Response(serializer.data)
