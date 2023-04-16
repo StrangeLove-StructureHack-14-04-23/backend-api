@@ -87,6 +87,7 @@ class GetCardByID(APIView):
         serializer = serializers.BusinessCardSerializer(card)
         serializer.data._mutable = True
         serializer.data.update({"first_name": card.first_name})
+        serializer.data.update({"last_name": card.last_name})
         return Response(serializer.data)
 
 
