@@ -131,10 +131,11 @@ class ConnectToHotspot(APIView):
         if not request.data.get("user_id"):
             return Response({"user_id": "required"})
 
-        hot = Hotspot.objects.filter(ip=request.data["ip"]).first()
+        ip = request.data['ip'][:request.data['ip'].rfind('.')]
+        hot = Hotspot.objects.filter(ip=ip).first()
         if not hot:
             hot = Hotspot()
-            hot.ip = request.data['ip']
+            hot.ip = ip
             hot.peoples = hot.add_to_people(request.data['user_id'])
             hot.save()
             return Response({"status": "created new hot"})
