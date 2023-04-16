@@ -35,6 +35,13 @@ class BusinessCard(models.Model):
             return "Can't find user"
         return o.first_name
 
+    @property
+    def last_name(self):
+        o = User.objects.filter(id=self.owner_id).first()
+        if not o:
+            return "Can't find user"
+        return o.last_name
+
     def __str__(self):
         return f"{self.first_name} - {self.role}: {self.phone} / ({self.own_site}, {self.linkedin_url}, {self.telegram_url})"    
 

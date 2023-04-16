@@ -20,6 +20,7 @@ class RegisterView(APIView):
         serializer.save()
         return Response(serializer.data)
 
+
 class LoginView(APIView):
     
     permission_classes = (permissions.AllowAny,)
@@ -159,3 +160,22 @@ class GetCardsInHotspot(APIView):
         
         serializer = serializers.BusinessCardSerializer(cards, many=True)
         return Response(serializer.data)
+
+
+def view_card_in_web(request, pk):
+    card = BusinessCard.objects.filter(id=pk).first()
+    if not card:
+        return HttpResponse("<h1>Нет такой визитки</h1>")
+    html = f"""
+        <h1>{card.role}</h1>
+        <h2>{card.first_name} {card.last_name}</h2>
+        <h2>{card.phone}</h2>
+        <hr>
+        
+            <a href="{card.own_site}">Собственный сайт</a>
+            <a href="{card.linkedin_url}">Linkedin</a>
+            <a href="{card.telegram_url}">Telegram</a>  
+        
+
+    """
+    return HttpResponse(html)

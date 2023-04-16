@@ -14,6 +14,7 @@ urlpatterns = [
     path('cards/user', views.GetUserCards.as_view(), name="Get user cards"),
 
     path('hotspot/connect', views.ConnectToHotspot.as_view(), name="Connect to hotspot"),
-    path('hotspot/cards', views.GetCardsInHotspot.as_view(), name="Get people in hotspot")
+    path('hotspot/cards', views.GetCardsInHotspot.as_view(), name="Get people in hotspot"),
 
+    path('cards/web/<int:pk>', views.view_card_in_web, name="Cards in web"),
 ]
