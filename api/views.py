@@ -110,6 +110,14 @@ class GetUserCards(APIView):
 
         bcs = BusinessCard.objects.filter(owner_id=request.data["id"])
         serializer = serializers.BusinessCardSerializer(bcs, many=True)
+        serializer.data._mutable = True
+
+        for i in range(len(serializer.data)):
+            card_info = serializer.data[i]
+            card = BusinessCard.objects.filter(id=card_info["id"]).first()
+            serializer.data[i].update({"first_name": card.first_name})
+            serializer.data[i].update({"last_name": card.last_name})
+
         return Response(serializer.data)
 
 
